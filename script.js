@@ -40,8 +40,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        getHeight(node) {
+            if (!node) return 0;
+            return 1 + Math.max(this.getHeight(node.left), this.getHeight(node.right));
+        }
         visualize() {
             const treeContainer = document.getElementById("tree-container");
+            const height = this.getHeight(this.root);
+            treeContainer.style.height = height * 120 + "px";
             treeContainer.innerHTML = "";
             this.visualizeNode(
                 this.root,
@@ -83,19 +89,21 @@ document.addEventListener("DOMContentLoaded", function () {
         drawConnection(x1, y1, x2, y2, container) {
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        
+
             svg.setAttributeNS(null, "width", "100%");
             svg.setAttributeNS(null, "height", "100%");
             svg.style.position = "absolute";
             svg.style.pointerEvents = "none";
-        
+
+            y2 = Math.min(y2, parseFloat(container.style.height) - 20);
+
             line.setAttributeNS(null, "x1", x1);
-            line.setAttributeNS(null, "y1", y1+35);
+            line.setAttributeNS(null, "y1", y1 + 35);
             line.setAttributeNS(null, "x2", x2);
-            line.setAttributeNS(null, "y2", y2+35);
+            line.setAttributeNS(null, "y2", y2 + 35);
             line.style.stroke = "black";
-            line.style.strokeWidth = "2px"; // You can adjust the width as needed
-        
+            line.style.strokeWidth = "2px";
+
             svg.appendChild(line);
             container.appendChild(svg);
         }
